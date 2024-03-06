@@ -15,21 +15,38 @@ struct ContentView: View {
             ["1","2", "3", "+"],
             ["0", " . " , "="]
         ]
-    @State private var displayNum: Int = 0
-    @State private var num1: Int = 0
-    @State private var num2: Int = 0
+    @State private var displayNum: String = "0"
+    @State private var num1: String = "0"
+    @State private var num2: String = "0"
     @State private var oprator: String = ""
+    
+    @State private var didTap: Bool = false
+  
+    
+    
 
    
     var body: some View {
         VStack {
             HStack {
-                Text("\(displayNum)")
-                    .font(.system(size: 60))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding()
-                    .bold()
+            
+                if displayNum <= "7" {
+                    Text("\(displayNum)")
+                        .font(.system(size: 60))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding()
+                        .bold()
+                } else {
+                    Text("\(displayNum)")
+                        .font(.system(size: 60))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding()
+                        .bold()
+                }
+                
+                
             }
                 ForEach(numsAndOperations.indices, id: \.self) { num in
                     HStack {
@@ -39,28 +56,30 @@ struct ContentView: View {
                             
                             if char == "÷" || char == "x" || char == "-"  || char == "+" || char == "=" {
                                 Button(action: {
+                                   
+                                    didTap = true
                                     
                                     if char == "+" {
                                         
                                         num1 = displayNum
-                                        displayNum = 0
+                                        displayNum = "0"
                                         oprator = "+"
-                                        
+        
                                         
                                          
                                     } else if char == "-" {
                                         num1 = displayNum
-                                        displayNum = 0
+                                        displayNum = "0"
                                         oprator = "-"
                                         
                                     } else if char == "x" {
                                         num1 = displayNum
-                                        displayNum = 0
+                                        displayNum = "0"
                                         oprator = "x"
                                         
                                     } else if char == "÷" {
                                         num1 = displayNum
-                                        displayNum = 0
+                                        displayNum = "0"
                                         oprator = "÷"
                                     } else if char == "=" {
                                         num2 = displayNum
@@ -85,27 +104,44 @@ struct ContentView: View {
                                     
 //
                                 }, label: {
-                                    Text("\(char)")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 25))
-                                        .frame(width: 40, height: 40)
-                                        .padding()
-                                        .background(Color("Orange"))
-                                        .clipShape(Circle())
-                                })
-                            } else if char == "AC" || char == "+/-" ||  char == "%" {
-                                Button(action: {
-                                    if char == "AC" {
-                                        displayNum = 0
+                                    withAnimation {
+                                        Text("\(char)")
+                                            .foregroundColor(.white)
+                                            .font(.system(size: 25))
+                                            .frame(width: 40, height: 40)
+                                            .padding()
+                                            .background(Color.orange)
+//                                            .background(didTap ? Color.white : Color("Orange"))
+                                            .clipShape(Circle())
+                                            
                                     }
                                     
-                                    if char == "%" {
-                                      
-//                                        if let number = Int(displayNum) {
-//                                            number = Double(displayNum) * 0.01
-//                                        }
+                                    
+                                })
+                            } else if char == "AC" || char == "+/-" ||  char == "%" || char == "C" {
+                                Button(action: {
                                        
-                                    }
+                                    
+                                        if char == "AC" || char == "C" {
+                                            displayNum = "0"
+
+                                            numsAndOperations[0][0] = "AC"
+                                        }
+                                       else if char == "%" {
+                                            if let displayDouble = Double(displayNum) {
+                                                displayNum = String(displayDouble * 0.01)
+                                            }
+                                            
+                                        } else if char == "+/-" {
+                                            if let number = Int(displayNum) {
+                                                displayNum =  String(number * -1)
+                                                
+                                            }
+                                            
+                                            
+                                        }
+                                    
+                                    
                                 }, label: {
                                     Text("\(char)")
                                         .foregroundColor(.black)
@@ -115,25 +151,35 @@ struct ContentView: View {
                                         .background(Color("Light Gray"))
                                         .clipShape(Circle())
                                 })
+                                
                             } else if char == "0" {
-                                Button(action: {
-                                    
-                                }, label: {
-                                    Text("\(char)")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 25))
-                                        .frame(width: 100, height: 40)
-                                        .padding()
-                                        .background(Color("Dark Gray"))
-                                        .cornerRadius(40)
-                                })
+                                withAnimation {
+                                    Button(action: {
+                                     
+                                    }, label: {
+                                        Text("\(char)")
+                                            .foregroundColor(.white)
+                                            .font(.system(size: 25))
+                                            .frame(width: 130, height: 40)
+                                            .padding()
+                                            .background(Color("Dark Gray"))
+                                            .cornerRadius(40)
+                                    })
+//
+                                }
 //
                             } else {
                                 
                                 Button(action: {
-                                    //DN -> Display Number
-                                    if let DN = Int(char) {
-                                        displayNum = DN
+                                    numsAndOperations[0][0] = "C"
+                                
+                                   
+                                    if displayNum == "0" {
+                                        displayNum = char
+                                    } else {
+                                        
+                                        displayNum += char
+                                      
                                     }
                                     
                                 }, label: {
@@ -152,20 +198,11 @@ struct ContentView: View {
                             }
                         }
                             
-                        
-                            
-                        }
-                    .padding()
-                    
-                    
-                    
-                    
                     }
-                    
-                    
-            
-                    
+                    .padding()
                 
+                    
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
@@ -183,24 +220,44 @@ struct ContentView: View {
         
 }
 
-func add(num1: Int, num2: Int) -> Int {
-    let sum = num1 + num2
-    return sum
+func add(num1: String, num2: String) -> String {
+    if let number1 = Double(num1), let number2 = Double(num2) {
+        let result = number1 + number2
+        
+        return String(result)
+    } else {
+        return "Invalid Result"
+    }
 }
 
-func subtract(num1: Int, num2: Int) -> Int {
-    let subtractopreator = num1 - num2
-    return subtractopreator
+func subtract(num1: String, num2: String) -> String {
+    if let number1 = Double(num1), let number2 = Double(num2) {
+        let result = number1 - number2
+        
+        return String(result)
+    } else {
+        return "Invalid Result"
+    }
 }
 
-func divde(num1: Int, num2: Int) -> Int {
-    let opreator = num1 / num2
-    return opreator
+func divde(num1: String, num2: String) -> String {
+    if let number1 = Double(num1), let number2 = Double(num2) {
+        let result = number1 / number2
+        
+        return String(result)
+    } else {
+        return "Invalid Result"
+    }
 }
 
-func mutiply(num1: Int, num2: Int) -> Int {
-    let muti = num1  * num2
-    return muti
+func mutiply(num1: String, num2: String) -> String {
+    if let number1 = Double(num1), let number2 = Double(num2) {
+        let result = number1 * number2
+        
+        return String(result)
+    } else {
+        return "Invalid Result"
+    }
 }
 
 
