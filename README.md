@@ -17,4 +17,4 @@ The Calculator app allows users to perform basic arithmetic operations such as a
 
 ## Screen Shot
 
-![Simulator Screenshot - iPhone 15 Pro - 2024-03-08 at 08 36 28](https://github.com/thinknotes/SwiftUI-IOSCalculator/assets/138826450/d827d394-0f39-477b-afae-29c014a26c92)
+![Simulator Screenshot - iPhone 15 Pro - 2024-03-08 at 08 36 28](https://github.com/thinknotes/SwiftUI-IOSCalculator/assets/138826450/acc29988-fe15-4b7a-a81f-fa9378cddd70)
